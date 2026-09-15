@@ -251,11 +251,11 @@ function ddayLabel(diff) {
   if (diff > 0) return `D-${diff}`;
   return `D+${-diff}`;
 }
-function ddayColor(diff) {
-  if (diff <= 0) return COLORS.coral;
-  if (diff <= 2) return COLORS.coral;
-  if (diff <= 5) return COLORS.yellow;
-  return COLORS.muted;
+function ddayColor(diff, colors) {
+  if (diff <= 0) return colors.coral;
+  if (diff <= 2) return colors.coral;
+  if (diff <= 5) return colors.yellow;
+  return colors.muted;
 }
 function bumpStreak(streak) {
   const today = todayKey();
@@ -556,7 +556,8 @@ ${slotList || "(없음)"}
 
 원칙: durationMin은 해당 공강 길이를 넘지 않게 잡아. 시작 부담을 줄이도록 작은 단위로 제안하고, 말투는 다정하고 담백하게.`;
 
-      const response = await fetch("/api/plan", {
+      const planApiUrl = import.meta.env.VITE_PLAN_API_URL || "/api/plan";
+      const response = await fetch(planApiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
@@ -1039,7 +1040,7 @@ ${slotList || "(없음)"}
                             <span style={{ color: COLORS.muted, fontFamily: "'IBM Plex Mono', monospace" }} className="text-xs">
                               {t.due ? (
                                 <>
-                                  <span style={{ color: ddayColor(daysUntil(t.due)), fontWeight: 600 }}>{ddayLabel(daysUntil(t.due))} </span>
+                                  <span style={{ color: ddayColor(daysUntil(t.due), COLORS), fontWeight: 600 }}>{ddayLabel(daysUntil(t.due))} </span>
                                   {t.due} · {t.estMin ? `${t.estMin}분` : "시간 모름"}
                                 </>
                               ) : (
